@@ -1,24 +1,74 @@
-﻿using System;
+﻿using esArticoli;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace esArticoli
+namespace _10___Classe_articoli
 {
-    internal class ArticoloAlimentare : Articolo
+    public class ArticoloAlimentare : Articolo
     {
-        private int _annoScadenza;
-        public ArticoloAlimentare()
+        private int _anno;
+
+        public int Anno
         {
-            //attributi
-            annoScadenza = 0;
+            get { return _anno; }
+            set
+            {
+                if (this is ArticoloAlimentare)
+                    _anno = value;
+                else
+                    _anno = DateTime.Now.Year;
+            }
         }
-        public int annoScadenza
+
+        public ArticoloAlimentare() : base()
         {
-            get { return _annoScadenza; }
-            set { _annoScadenza = value; }
+            Anno = DateTime.Now.Year + 2;
+        }
+
+        public ArticoloAlimentare(int anno, int codice, string descrizione, double prezzoUnitario, bool cartaFedeltà) : base(codice, descrizione, prezzoUnitario, cartaFedeltà)
+        {
+            Anno = anno;
+        }
+
+        public ArticoloAlimentare(ArticoloAlimentare vecchioArtAlim, Articolo vecchioArt) : base(vecchioArt)
+        {
+            Anno = vecchioArtAlim.Anno;
+        }
+
+        public override string ToString()
+        {
+            return $"{base.ToString()}; Anno: {Anno}";
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            ArticoloAlimentare other = (ArticoloAlimentare)obj;
+
+            if (base.Equals(other) && Anno == other.Anno)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public override double Sconta()
+        {
+            double cliente = base.Sconta();
+            if (Anno == DateTime.Now.Year)
+            {
+                return PrezzoUnitario - cliente * 20F / 100F;
+            }
+
+            return cliente;
         }
     }
 }
-
